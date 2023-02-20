@@ -1,0 +1,49 @@
+def cfg_to_minimalistic_grammar(cfg):
+    start_symbol = cfg.start_symbol
+    non_terminals = cfg.non_terminals
+    terminals = cfg.terminals
+    productions = cfg.productions
+    minimalistic_grammar = {}
+
+    # generate minimalistic grammar items for each production rule
+    for lhs in non_terminals:
+        for rhs in productions[lhs]:
+            rhs_list = list(rhs)
+            for i in range(len(rhs_list)):
+                if rhs_list[i] in terminals:
+                    rhs_list[i] = 't'
+                else:
+                    rhs_list[i] = 'nt'
+            rhs_str = ''.join(rhs_list)
+            if rhs_str not in minimalistic_grammar:
+                minimalistic_grammar[rhs_str] = [lhs]
+            else:
+                minimalistic_grammar[rhs_str].append(lhs)
+
+    # create minimalistic grammar object
+    mg_start_symbol = 'nt'
+    mg_non_terminals = list(non_terminals)
+    mg_non_terminals.append(mg_start_symbol)
+    mg_terminals = ['t', mg_start_symbol]
+    mg_productions = {mg_start_symbol: [start_symbol]}
+    for rhs_str, lhs_list in minimalistic_grammar.items():
+        mg_productions[rhs_str] = lhs_list
+
+    return MinimalisticGrammar(mg_start_symbol, mg_non_terminals, mg_terminals, mg_productions)
+    
+    
+   #creating two classes
+   
+   class CFG:
+    def __init__(self, start_symbol, non_terminals, terminals, productions):
+        self.start_symbol = start_symbol
+        self.non_terminals = non_terminals
+        self.terminals = terminals
+        self.productions = productions
+
+ class MinimalisticGrammar:
+    def __init__(self, start_symbol, non_terminals, terminals, productions):
+        self.start_symbol = start_symbol
+        self.non_terminals = non_terminals
+        self.terminals = terminals
+        self.productions = productions
